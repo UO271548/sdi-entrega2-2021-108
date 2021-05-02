@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block titulo %} Registrar usuario {% endblock %}
+
+{% block contenido_principal %}
+<h2>Registrar usuario</h2>
+<form class="form-horizontal" method="post" action="/usuario"  id = "bregistro">
+    <div class="form-group">
+        <label class="control-label col-sm-2" for="name">Name:</label>
+        <div class="col-sm-10">
+            <input type="name" class="form-control" name="name"
+                   placeholder="Ignacio" required="true" id = "registroNombre" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-sm-2" for="surname">Surname:</label>
+        <div class="col-sm-10">
+            <input type="surname" class="form-control" name="surname"
+                   placeholder="Gomez" required="true" id = "registroApellido"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-sm-2" for="email">Email:</label>
+        <div class="col-sm-10">
+            <input type="email" class="form-control" name="email"
+                   placeholder="email@email.com" required="true" id = "registroEmail"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-sm-2" for="password">Password:</label>
+        <div class="col-sm-10">
+            <input type="password"  class="form-control" name="password"
+                   placeholder="contraseña" required="true" id = "registroPassword" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-sm-2" for="confirmPassword">ConfirmPassword:</label>
+        <div class="col-sm-10">
+            <input type="password"  class="form-control" name="confirmPassword"
+                   placeholder="repitaContraseña" required="true" id = "registroConfirmPassword" />
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-primary" id = "boton-registro"
+                    onclick="agregarUsuario()">Registrar</button>
+        </div>
+    </div>
+</form>
+
+<script>
+    function agregarUsuario( ) {
+        $.ajax({
+            url: URLbase + "/usuario",
+            type: "POST",
+            data: {
+                name : $("#registroNombre").val(),
+                surname : $("#registroApellido").val(),
+                email : $("#registroEmail").val(),
+                password : $("#registroPassword").val(),
+                confirmPassword : $("#registroConfirmPassword").val()
+            },
+            dataType: 'json',
+            headers: { "token": token },
+            success: function(respuesta) {
+                console.log(respuesta); // <-- Prueba
+                $( "#contenedor-principal" ).load( "bidentificacion.html");
+
+            },
+            error: function (error) {
+                console.log(error); // <-- Prueba
+                $("#div-errores").remove();
+                let errores = error.responseJSON.errores;
+                if (errores != null && errores.length>0){
+                    $("#bregistro")
+                        .prepend("<div id = 'div-errores' class='alert alert-danger'> <ul id = 'ul-errores'></ul></div>");
+                    for (i = 0; i < errores.length; i++) {
+                        $("#ul-errores").append("<li >"+ errores[i] + "</li>");
+                    }
+                } else {
+                    $("#bregistro")
+                        .prepend("<div id = 'div-errores' class='alert alert-danger'>Se ha producido un error no controlado</div>");
+                }
+            }
+        });
+    }
+</script>
+{% endblock %}
