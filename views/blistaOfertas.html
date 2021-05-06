@@ -1,0 +1,29 @@
+{% extends "base.html" %} {% block titulo %} Mis publicaciones {% endblock %}
+
+{% block contenido_principal %}
+<h2>Tus Ofertas</h2>
+
+<div class="table-responsive">
+        <table class="table table-hover" id ="userTable">
+            <thead>
+            <tr>
+                <th>Titulo</th>
+                <th>Descripcion</th>
+                <th>Precio</th>
+                <th>Eliminar</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for oferta in ofertas %}
+            <tr>
+                <td>{{ oferta.title }}</td>
+                <td>{{ oferta.description }}</td>
+                <td>{{ oferta.price }}</td>
+                <td><a href="/oferta/eliminar/{{ oferta._id.toString() }}">Eliminar</a></td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+</div>
+
+{% endblock %}

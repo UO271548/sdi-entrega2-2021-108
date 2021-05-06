@@ -21,16 +21,46 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <img src="/img/logo.png" alt="logo"/>
         </div>
         <div class="collapse navbar-collapse" id="myNavbar">
             <ul class="nav navbar-nav">
-                <li id="mTienda" class="active"><a href="/ofertas">Ofertas</a></li>
-                <li id="mCompras"><a href="/compras">Compras</a></li>
-            </ul>
+                {% if role == 'Admin' %}
+                    <ul class="nav navbar-nav">
+                        <li id="mListarUsuarios" ><a href="/usuario/lista">Gestión de Usuarios</a></li>
+                    </ul>
+                {% endif %}
+                {% if role == 'Estandar' %}
+                    <li id="mOfertas" class="dropdown" >
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#" > Gestion de Ofertas<span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/oferta/agregar" >Agregar Oferta</a></li>
+                            <li><a href="/oferta/lista" >Tus Ofertas</a></li>
+                        </ul>
+                    </li>
+                    <li id="mCompras" class="dropdown" >
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#" > Gestion de Compras<span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/compra/buscar" >Buscar Ofertas</a></li>
+                            <li><a href="/compra/lista" >Tus Compras</a></li>
+                        </ul>
+                    </li>
+                {% endif %}
+                </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="/registrarse"><span class="glyphicon glyphicon-user"></span> Registrate</a></li>
-                <li><a href="/identificarse"><span class="glyphicon glyphicon-log-in"></span> Identifícate</a></li>
+
+                {% if usuario == null %}
+                    <li><a href="/registrarse"><span class="glyphicon glyphicon-user"></span>Registrate </a></li>
+                    <li><a href="/identificarse"><span class="glyphicon glyphicon-log-in"></span>Identifícate</a></li>
+                {% endif %}
+                {% if usuario != null %}
+                    <li><a>{{ usuario }}</a></li>
+                    {% if role == 'Estandar' %}
+                        <li><a>{{ money }}€</a></li>
+                    {% endif %}
+                    <li><a href="/desconectarse"><span class="glyphicon glyphicon-log-out"></span>Desconectarse</a></li>
+                {% endif %}
             </ul>
         </div>
     </div>

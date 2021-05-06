@@ -1,0 +1,29 @@
+{% extends "base.html" %} {% block titulo %} Mis publicaciones {% endblock %}
+
+{% block contenido_principal %}
+<h2>Lista de Compras</h2>
+
+<div class="table-responsive">
+    <table class="table table-hover" id ="userTable">
+        <thead>
+        <tr>
+            <th>Titulo</th>
+            <th>Descripcion</th>
+            <th>Precio</th>
+            <th>Vendedor</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for compra in compras %}
+        <tr>
+            <td>{{ compra.title }}</td>
+            <td>{{ compra.description }}</td>
+            <td>{{ compra.price }}</td>
+            <td>{{ compra.seller }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

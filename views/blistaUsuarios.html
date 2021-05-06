@@ -1,0 +1,52 @@
+{% extends "base.html" %} {% block titulo %} Mis publicaciones {% endblock %}
+
+{% block contenido_principal %}
+<h2>Lista de Usuarios</h2>
+
+<div class="table-responsive">
+    <form class="navbar-form" action="/usuario/eliminar" method="post">
+    <table class="table table-hover" id ="userTable">
+        <thead>
+        <tr>
+            <th>Email</th>
+            <th>Nombre</th>
+            <th>Apellidos</th>
+            <th>Eliminar</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for usuario in usuarios %}
+        <tr>
+            <td>{{ usuario.email }}</td>
+            <td>{{ usuario.name }}</td>
+            <td>{{ usuario.surname }}</td>
+            <td align="left"> <input class="prueba" id="{{usuario._id.toString()}}" type="checkbox" name="uid" value =""></td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+        <button type=submit class="btn btn-default" id="btndelete" >Eliminar</button>
+    </form>
+
+
+</div>
+
+{% endblock %}
+
+<script>
+
+    $('#btndelete').on('click', function () {
+       // let searchIDs = $("#userTable input:checkbox:checked").map(function () {
+            //return $(this).val();
+        //}).get();
+        let searchIDs = document.getElementsByName("checkbox")
+        console.log("selected::::" + searchIDs);
+        $.ajax({
+            url:'/usuario/eliminar',type:'get',
+            data:{searchid:searchIDs},
+            success:function(response){
+                console.log(response);
+            }
+        });
+    });
+</script>

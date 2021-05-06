@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block titulo %} Registrar usuario {% endblock %}
+
+{% block contenido_principal %}
+<h2>Registrar Ofertas</h2>
+<form class="form-horizontal" method="post" action="/oferta/agregar"  id = "bagregarOferta">
+    {% if errores != null%}
+        <div id="div-error-registro" class="alert alert-danger">
+            {% for error in errores %}
+            <tr>
+                <li> {{error}}</li>
+            <tr>
+                {% endfor %}
+        </div>
+    {% endif %}
+    <div class="form-group">
+        <label class="control-label col-sm-2" for="title">Titulo:</label>
+        <div class="col-sm-10">
+            <input type="title" class="form-control" name="title"
+                   placeholder="Titulo Producto" required="true" id = "tituloOferta" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-sm-2" for="description">Surname:</label>
+        <div class="col-sm-10">
+            <input type="description" class="form-control" name="description"
+                   placeholder="Descripcion del Producto" required="true" id = "descripcionOferta"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-sm-2" for="price">Precio:</label>
+        <div class="col-sm-10">
+            <input type="price" class="form-control" name="price"
+                   placeholder="100" required="true" id = "precioOferta"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-primary" id = "boton-agregar">Agregar</button>
+        </div>
+    </div>
+</form>
+
+
+{% endblock %}
