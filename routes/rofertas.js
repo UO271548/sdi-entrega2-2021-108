@@ -3,7 +3,7 @@ module.exports = function(app, swig, gestorBD) {
         let criterio = {"_id" : gestorBD.mongo.ObjectID(req.params.id) };
         gestorBD.eliminarOferta(criterio,function(ofertas){
             if ( ofertas == null ){
-                req.session.errores = {mensaje:"Error al eliminar el usuario,",tipoMensaje:"alert-danger"};
+                req.session.errores = {mensaje:"Error al eliminar el usuario.",tipoMensaje:"alert-danger"};
 
                 res.redirect("/errors");
             } else {
@@ -13,11 +13,22 @@ module.exports = function(app, swig, gestorBD) {
     })
 
     app.get('/oferta/agregar', function (req, res){
-        let respuesta = swig.renderFile('views/bagregarOferta.html', {
-            usuario : req.session.usuario,
-            role : req.session.role,
-            money : req.session.money
-        });
+        let respuesta = {};
+        if (req.session.errorAgregarOferta == null) {
+            respuesta = swig.renderFile('views/bagregarOferta.html', {
+                usuario: req.session.usuario,
+                role: req.session.role,
+                money: req.session.money
+            });
+        }else{
+            respuesta = swig.renderFile('views/bagregarOferta.html', {
+                usuario: req.session.usuario,
+                role: req.session.role,
+                money: req.session.money,
+                errores : req.session.errorAgregarOferta
+            });
+        }
+        req.session.errorAgregarOferta = null;
         res.send(respuesta);
     });
 
@@ -33,13 +44,15 @@ module.exports = function(app, swig, gestorBD) {
         }
         validaDatosAgregarOferta(oferta, function (errors){
             if (errors != null && errors.length > 0){
-                let respuesta = swig.renderFile('views/bagregarOferta.html', {
-                    usuario : req.session.usuario,
-                    role : req.session.role,
-                    money : req.session.money,
-                    errores : errors
-                });
-                res.send(respuesta);
+                //let respuesta = swig.renderFile('views/bagregarOferta.html', {
+                    //usuario : req.session.usuario,
+                    //role : req.session.role,
+                    //money : req.session.money,
+                  //  errores : errors
+                //});
+                //res.send(respuesta);
+                req.session.errorAgregarOferta = errors;
+                res.redirect('/oferta/agregar');
             }else {
                 gestorBD.insertarOferta(oferta, function (id) {
                     if (id == null) {

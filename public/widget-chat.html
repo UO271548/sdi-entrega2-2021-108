@@ -1,0 +1,97 @@
+<div id="widget-ofertas" >
+    <h2> Mensajes </h2>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>Mensajes:</th>
+            <th>Usuario:</th>
+            <th class="col-md-1"></th>
+        </tr>
+        </thead>
+        <tbody id="tablaCuerpo">
+
+        </tbody>
+    </table>
+    <div class="form-group">
+        <label class="control-label col-sm-2" for="nuevo-mensaje">Nuevo Mensaje:</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" name="nuevo-mensaje"
+                   placeholder="Nuevo mensaje" id="nuevo-mensaje" />
+        </div>
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="button" class="btn btn-primary" id="boton-agregar-mensaje"
+                    onclick="agregarMensaje()">Enviar Mensaje</button>
+        </div>
+    </div>
+    <button onclick="widgetOfertas()" class="btn" >Volver</button>
+
+</div>
+
+<script>
+
+    var chats;
+
+    function cargarChats(){
+        $.ajax({
+            url: URLbase + "/oferta/mensajes/" + idOfertaSeleccionada,
+            type: "GET",
+            data: { },
+            dataType: 'json',
+            headers: { "token": token },
+            success: function(respuesta) {
+                chats = respuesta;
+                actualizarTabla(chats);
+            },
+            error : function (error){
+                $( "#contenedor-principal" ).load("widget-ofertas.html");
+            }
+        });
+    }
+
+    function actualizarTabla(chatsMostrar){
+        $( "#tablaCuerpo" ).empty(); // Vaciar la tabla
+        for (i = 0; i < chatsMostrar.length; i++) {
+            $( "#tablaCuerpo" ).append(
+                "<tr id="+chatsMostrar[i]._id+">"+
+                "<td>"+chatsMostrar[i].mensaje +"</td>" +
+                "<td>"+chatsMostrar[i].emisor +"</td>" +
+                "<td>"+
+                "</td>"+
+                "</tr>" );
+        }
+    }
+
+    function agregarMensaje( ) {
+        $.ajax({
+            url: URLbase + "/oferta/chat/" + idOfertaSeleccionada,
+            type: "PUT",
+            data: {
+                mensaje : $("#nuevo-mensaje").val(),
+            },
+            dataType: 'json',
+            headers: { "token": token },
+            success: function(respuesta) {
+                console.log(respuesta); // <-- Prueba
+                $( "#contenedor-principal" ).load( "widget-chat.html");
+
+            },
+            error: function (error) {
+                console.log(error); // <-- Prueba
+                $("#div-errores").remove();
+                let errores = error.responseJSON.errores;
+                if (errores != null && errores.length>0){
+                    $("#widget-agregar")
+                        .prepend("<div id = 'div-errores' class='alert alert-danger'> <ul id = 'ul-errores'></ul></div>");
+                    for (i = 0; i < errores.length; i++) {
+                        $("#ul-errores").append("<li >"+ errores[i] + "</li>");
+                    }
+                } else {
+                    $("#widget-agregar")
+                        .prepend("<div id = 'div-errores' class='alert alert-danger'>Se ha producido un error no controlado</div>");
+                }
+            }
+        });
+    }
+
+    cargarChats();
+</script>

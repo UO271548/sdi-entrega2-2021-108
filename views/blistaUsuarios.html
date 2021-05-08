@@ -20,7 +20,8 @@
             <td>{{ usuario.email }}</td>
             <td>{{ usuario.name }}</td>
             <td>{{ usuario.surname }}</td>
-            <td align="left"> <input class="prueba" id="{{usuario._id.toString()}}" type="checkbox" name="uid" value =""></td>
+            <td align="left"> <input id="{{usuario._id.toString()}}" type="checkbox"
+                                     name="uid" value ="{{usuario.email}}"></td>
         </tr>
         {% endfor %}
         </tbody>
@@ -32,21 +33,3 @@
 </div>
 
 {% endblock %}
-
-<script>
-
-    $('#btndelete').on('click', function () {
-       // let searchIDs = $("#userTable input:checkbox:checked").map(function () {
-            //return $(this).val();
-        //}).get();
-        let searchIDs = document.getElementsByName("checkbox")
-        console.log("selected::::" + searchIDs);
-        $.ajax({
-            url:'/usuario/eliminar',type:'get',
-            data:{searchid:searchIDs},
-            success:function(response){
-                console.log(response);
-            }
-        });
-    });
-</script>
