@@ -1,5 +1,10 @@
 module.exports = function(app, swig, gestorBD) {
 
+    app.get('/inicio', function (req,res){
+        let respuesta = swig.renderFile("views/busuario.html");
+        res.send(respuesta);
+    });
+
     app.post('/usuario', function(req, res) {
         let seguro = app.get("crypto").createHmac('sha256', app.get('clave'))
             .update(req.body.password).digest('hex');
@@ -15,11 +20,6 @@ module.exports = function(app, swig, gestorBD) {
         }
         validaDatosRegistro(usuario, confirmPass, function(errors){
             if (errors != null && errors.length > 0){
-                //let respuesta = swig.renderFile('views/bregistro.html',{
-                  //  errores : errors
-                //});
-                //res.send(respuesta);
-
                 req.session.erroresRegistro = errors;
                 res.redirect("/registrarse");
             } else {
@@ -138,7 +138,7 @@ module.exports = function(app, swig, gestorBD) {
                 req.session.usuario = null;
                 req.session.role = null;
                 req.session.money = null;
-                req.session.errorLogin = "Email o password incorrecto";
+                req.session.errorLogin = "Email o contraseña incorrecto";
 
                 //req.session.errores = {mensaje:"Email o password incorrecto",tipoMensaje:"alert-danger"};
 
@@ -189,21 +189,43 @@ module.exports = function(app, swig, gestorBD) {
 
     function validaDatosRegistro(usuario,confirmPassword, funcionCallback){
         let errors = new Array();
-
+        if(usuario.name.length == 0){
+            errors.push("El campo Nombre no puede ser vacio.");
+        }
+        if (usuario.surname.length == 0){
+            errors.push("El campo Apellido no puede ser vacio.");
+        }
+        if (usuario.email.length == 0){
+            errors.push("El campo Email no puede ser vacio.");
+        }
+        if (usuario.password.length == 0){
+            errors.push("El campo Contraseña no puede ser vacio.");
+        }
+        if (confirmPassword == undefined){
+            errors.push("El campo Confirmar Contraseña no puede ser vacio.");
+        }
         if (usuario.password != confirmPassword){
             errors.push("La contraña no coincide en ambos campos.");
         }
-        if (usuario.name.length < 1 || usuario.name.length > 20) {
-            errors.push("El nombre ha de estar entre 1 y 20 caracteres.");
+        if (usuario.name.length < 5 || usuario.name.length > 20) {
+            errors.push("El nombre ha de estar entre 5 y 20 caracteres.");
         }
-        if (usuario.surname.length < 1 || usuario.surname.length > 20){
-            errors.push("El apellido ha de estar entre 1 y 20 caracteres.");
+        if (usuario.surname.length < 5 || usuario.surname.length > 20){
+            errors.push("El apellido ha de estar entre 5 y 20 caracteres.");
         }
-        if (errors.length <= 0){
-            funcionCallback(null);
-        }else{
-            funcionCallback(errors);
-        }
+        let criterio = {"email" : usuario.email};
+        gestorBD.obtenerUsuarios(criterio, function (usuarioRe){
+           if (usuarioRe != null && usuarioRe.length > 0){
+               errors.push("El email introducido ya existe en otra cuenta.");
+
+           }
+            if (errors.length <= 0){
+                funcionCallback(null);
+            }else{
+                funcionCallback(errors);
+            }
+        });
+
     }
 
 }

@@ -1,6 +1,9 @@
 let express = require('express')
 let app = express();
 
+let fs = require('fs');
+let https = require('https');
+
 let jwt = require('jsonwebtoken');
 app.set('jwt',jwt);
 
@@ -136,13 +139,17 @@ require("./routes/rusuarios.js")(app, swig, gestorBD); // (app, param1, param2, 
 require("./routes/rofertas.js")(app, swig, gestorBD); // (app, param1, param2, etc.)
 require("./routes/rcompras.js")(app, swig, gestorBD); // (app, param1, param2, etc.)
 require("./routes/rapiusuarios.js")(app, gestorBD);
+require("./routes/rpruebas.js")(app, swig, gestorBD); // (app, param1, param2, etc.)
 
 
 
 app.get('/', function (req, res) {
-    res.redirect('/');
+    res.redirect('/inicio');
 })
 
-app.listen(8081, function (){
-    console.log('Servidor activo');
+https.createServer({
+    key: fs.readFileSync('certificates/alice.key'),
+    cert: fs.readFileSync('certificates/alice.crt')
+}, app).listen(app.get('port'), function() {
+    console.log("Servidor activo");
 });

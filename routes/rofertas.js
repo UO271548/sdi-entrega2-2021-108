@@ -44,13 +44,6 @@ module.exports = function(app, swig, gestorBD) {
         }
         validaDatosAgregarOferta(oferta, function (errors){
             if (errors != null && errors.length > 0){
-                //let respuesta = swig.renderFile('views/bagregarOferta.html', {
-                    //usuario : req.session.usuario,
-                    //role : req.session.role,
-                    //money : req.session.money,
-                  //  errores : errors
-                //});
-                //res.send(respuesta);
                 req.session.errorAgregarOferta = errors;
                 res.redirect('/oferta/agregar');
             }else {
@@ -92,12 +85,20 @@ module.exports = function(app, swig, gestorBD) {
 
     function validaDatosAgregarOferta(oferta,funcionCallback){
         let errors = new Array();
-
-        if (oferta.title.length < 7 || oferta.title.length > 20){
+        if (oferta.title.length == 0){
+            errors.push("El campo del titulo no puede ser vacío.");
+        }
+        if (oferta.description.length == 0){
+            errors.push("El campo de la descripción no puede ser vacío.");
+        }
+        if (oferta.price.length == 0){
+            errors.push("El campo del precio no puede ser vacío.");
+        }
+        if (oferta.title.length < 8 || oferta.title.length > 24){
             errors.push("El titulo debe tener entre 7 y 20 caracteres.");
         }
-        if (oferta.description.length < 7 || oferta.description.length > 20){
-            errors.push("La descripcion debe tener entre 7 y 20 caracteres.");
+        if (oferta.description.length < 8 || oferta.description.length > 60){
+            errors.push("La descripcion debe tener entre 7 y 60 caracteres.");
         }
         if (oferta.price < 0 ){
             errors.push("El precio no puede ser negativo.");

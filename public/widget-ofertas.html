@@ -1,5 +1,5 @@
 <div id="widget-ofertas" >
-    <input type="text" class="form-control" placeholder="Filtrar por titulo"
+    <input type="text" class="form-control" placeholder="Filtrar por titulo" name="busquedaTitulo"
            id="filtro-nombre"/>
     <table class="table table-hover">
         <thead>
@@ -49,7 +49,7 @@
                 "<td>"+ofertasMostrar[i].price+"</td>" +
                 "<td>"+ofertasMostrar[i].seller+"</td>" +
                 "<td>"+
-                "<a onclick=chats('"+ofertasMostrar[i]._id+"')>Chat</a><br>"+
+                "<a id='chathref' onclick=chats('"+ofertasMostrar[i]._id+"')>Chat</a><br>"+
                 "</td>"+
                 "</tr>" );
             // Mucho cuidado con las comillas del eliminarCancion

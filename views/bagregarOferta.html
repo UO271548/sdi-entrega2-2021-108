@@ -9,7 +9,7 @@
         <div id="div-error-registro" class="alert alert-danger">
             {% for error in errores %}
             <tr>
-                <li> {{error}}</li>
+                <li id = "error-agrefarOferta"> {{error}}</li>
             <tr>
                 {% endfor %}
         </div>
@@ -18,21 +18,21 @@
         <label class="control-label col-sm-2" for="title">Titulo:</label>
         <div class="col-sm-10">
             <input type="title" class="form-control" name="title"
-                   placeholder="Titulo Producto" required="true" id = "tituloOferta" />
+                   placeholder="Titulo Producto"  id = "tituloOferta" />
         </div>
     </div>
     <div class="form-group">
         <label class="control-label col-sm-2" for="description">Descripción:</label>
         <div class="col-sm-10">
             <input type="description" class="form-control" name="description"
-                   placeholder="Descripcion del Producto" required="true" id = "descripcionOferta"/>
+                   placeholder="Descripcion del Producto"  id = "descripcionOferta"/>
         </div>
     </div>
     <div class="form-group">
         <label class="control-label col-sm-2" for="price">Precio:</label>
         <div class="col-sm-10">
             <input type="price" class="form-control" name="price"
-                   placeholder="100" required="true" id = "precioOferta"/>
+                   placeholder="100"  id = "precioOferta"/>
         </div>
     </div>
     <div class="form-group">

@@ -85,7 +85,7 @@ module.exports = function(app, swig, gestorBD) {
         let criterio = {};
 
         if( req.query.busqueda != null ){
-            criterio = {$and: [{"title" :  {$regex : ".*"+req.query.busqueda+".*"}}, {"seller" : {$ne : req.session.usuario}}]};
+            criterio = {$and: [{"title" :  {$regex : ".*"+req.query.busqueda+".*", $options : "$i"}}, {"seller" : {$ne : req.session.usuario}}]};
         }
         else{
              criterio = {"seller" : { $ne : req.session.usuario}};
