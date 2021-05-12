@@ -1,26 +1,22 @@
 {% extends "base.html" %} {% block titulo %} Mis publicaciones {% endblock %}
 
 {% block contenido_principal %}
-<h2>Tus Ofertas</h2>
-
-<div class="table-responsive">
-    {% if errores != null%}
-    <div id="div-error-registro" class="alert alert-danger">
-        {% for error in errores %}
-        <tr>
-            <li id = "error-listaOferta"> {{error}}</li>
-        <tr>
-            {% endfor %}
+<h2>Lista de Ofertas Destacadas</h2>
+<div class="container">
+    {% if error != null %}
+    <div id="div-error-identificacion" class="alert alert-danger">
+        <td> {{error}}</td>
     </div>
     {% endif %}
-
+    <!-- Busqueda -->
+    <div class="table-responsive">
         <table class="table table-hover" id ="userTable">
             <thead>
             <tr>
                 <th>Titulo</th>
                 <th>Descripcion</th>
                 <th>Precio</th>
-                <th>Eliminar</th>
+                <th>Comprar</th>
             </tr>
             </thead>
             <tbody>
@@ -29,16 +25,16 @@
                 <td>{{ oferta.title }}</td>
                 <td>{{ oferta.description }}</td>
                 <td>{{ oferta.price }}</td>
-                <td><a href="/oferta/eliminar/{{ oferta._id.toString() }}">Eliminar</a></td>
-                {% if oferta.outstanding == false %}
-                <td><a href="/oferta/destacada/{{ oferta._id.toString() }}">Normal</a></td>
+                {% if oferta.buyer == null %}
+                <td><a href="/compra/comprar/{{ oferta._id.toString() }}">Comprar</a></td>
                 {% else %}
-                <td>Destacada</td>
+                <td>Vendido</td>
                 {% endif %}
             </tr>
             {% endfor %}
             </tbody>
         </table>
+    </div>
 </div>
 
 {% endblock %}

@@ -1,6 +1,11 @@
-module.exports = function(app, swig, gestorBD) {
+module.exports = function(app, swig, gestorBD, logger) {
 
+    /**
+     * Petición para realizar la compra de una oferta. Una vez realizada la compra nos redigira a la vista donde se en-
+     * -cueta la lista de compras del usuario.
+     */
     app.get('/compra/comprar/:id', function (req, res){
+        logger.info("Accediendo a la compra de una oferta");
         let ofertaId = gestorBD.mongo.ObjectID(req.params.id);
         let usuario = req.session.usuario;
 
@@ -24,16 +29,19 @@ module.exports = function(app, swig, gestorBD) {
                                 if (idUsuario == null) {
                                     res.send(respuesta);
                                 } else {
+                                    logger.info("Oferta Comprada");
                                     res.redirect("/compra/lista");
                                 }
                             });
                         }
                     });
                 }else{
+                    logger.error("No tienes suficiente dinero para comprar esa oferta.");
                     req.session.errorPrecio = "No tienes suficiente dinero para comprar esa oferta.";
                     res.redirect("/compra/buscar");
                 }
             }else{
+                logger.error("El usuario es el vendedor o esa oferta ya ha sido comprada");
                 req.session.errores = {mensaje:"El usuario es el vendedor o esa oferta ya ha sido comprada"
                     ,tipoMensaje:"alert-danger"};
                 res.redirect("/errors");
@@ -41,6 +49,12 @@ module.exports = function(app, swig, gestorBD) {
         });
     });
 
+    /**
+     * Función que comprueba si un usuario pasado por parámetro es el propetario de una oferta o ya ha comprado la oferta
+     * @param usuario El usuario a conocer si es el vendedor o comprador
+     * @param ofertaId El id de la oferta
+     * @param funcionCallback
+     */
     function noVendedorYnoComprador (usuario,ofertaId, funcionCallback){
         let criterio = {$and: [{"_id" : ofertaId}, {"seller": usuario}]};
         gestorBD.obtenerOfertas(criterio,function (ofertas){
@@ -60,10 +74,15 @@ module.exports = function(app, swig, gestorBD) {
         });
     };
 
+    /**
+     * Petición para get para mostrar la lista de compras que ha realizado un usuario.
+     */
     app.get('/compra/lista', function (req, res){
+        logger.info("Accediendo a la lista de compras");
         let criterio = {"buyer" : req.session.usuario};
         gestorBD.obtenerOfertas(criterio, function (compras){
             if (compras == null){
+                logger.error("Error al cargar la lista de compras");
                 req.session.errores = {mensaje:"Error al cargar la lista de compras",tipoMensaje:"alert-danger"};
 
                 res.redirect("/errors");
@@ -81,7 +100,13 @@ module.exports = function(app, swig, gestorBD) {
         });
     });
 
+    /**
+     * Petición get para obtener la lista en la que se encuentran las ofertas disponibles en la aplicación de otros usuarios
+     * Esta vista cuenta con un sistema de búsqueda (no distigue minúsculas y mayúsculas) y un sistema de paginación en
+     * la lista. Cada oferta cuenta con un enlace para realizar la compra.
+     */
     app.get('/compra/buscar', function (req, res){
+        logger.info("Accediendo a la lista de ofertas disponibles");
         let criterio = {};
 
         if( req.query.busqueda != null ){
@@ -97,6 +122,7 @@ module.exports = function(app, swig, gestorBD) {
         }
         gestorBD.obtenerOfertasPg(criterio, pg , function(ofertas, total ) {
             if (ofertas == null) {
+                logger.error("Error al listar la busqueda");
                 req.session.errores = {mensaje:"Error al listar la busqueda",tipoMensaje:"alert-danger"};
                 res.redirect("/errors");
             } else {
@@ -118,6 +144,37 @@ module.exports = function(app, swig, gestorBD) {
                         ofertas : ofertas,
                         paginas : paginas,
                         actual : pg,
+                        busqueda : req.query.busqueda,
+                        error: req.session.errorPrecio
+                    });
+                req.session.errorPrecio = null;
+                res.send(respuesta);
+            }
+        });
+    });
+
+    /**
+     * Lista en la que se muestran las ofertas que han sido destacadas por los usuarios vendedores de la oferta. En cada
+     * oferta se encuentra un enlace para acceder a la compra de dicha oferta.
+     */
+    app.get('/compra/destacada/lista', function (req, res){
+        logger.info("Accediendo a la lista de ofertas destacadas");
+        let criterio = {$and: [{"outstanding" : true}, {"seller" : {$ne : req.session.usuario}}]};
+
+
+        gestorBD.obtenerOfertas(criterio, function(ofertas ) {
+            if (ofertas == null) {
+                logger.error("Error al listar las ofertas destacadas");
+                req.session.errores = {mensaje:"Error al listar las ofertas destacadas",tipoMensaje:"alert-danger"};
+                res.redirect("/errors");
+            } else {
+
+                let respuesta = swig.renderFile('views/blistaOfertasDestacadas.html',
+                    {
+                        usuario : req.session.usuario,
+                        role : req.session.role,
+                        money : req.session.money,
+                        ofertas : ofertas,
                         error: req.session.errorPrecio
                     });
                 req.session.errorPrecio = null;

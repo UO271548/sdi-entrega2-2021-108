@@ -1,10 +1,7 @@
 module.exports = function(app, swig, gestorBD) {
 
     app.get('/pruebas', function (req, res){
-        gestorBD.dropUsuarios(function (id){});
-        gestorBD.dropOfertas(function (id){});
-        gestorBD.dropConversaciones(function (id){});
-        gestorBD.dropMensajes(function (id){});
+
 
         let seguro = app.get("crypto").createHmac('sha256', app.get('clave'))
             .update("admin").digest('hex');
@@ -144,9 +141,9 @@ module.exports = function(app, swig, gestorBD) {
             date : Date.now()
         }
         let oferta10 = {
-            title : "Opel Corsa",
-            description : "Opel Corsa con 100.000 km",
-            price : 1000,
+            title : "Cuenta RiotGames",
+            description : "Level 30 en el Lol",
+            price : 60,
             seller : usuario4.email,
             buyer : null,
             date : Date.now()
@@ -195,210 +192,220 @@ module.exports = function(app, swig, gestorBD) {
         let usuario = [admin, usuario1, usuario2, usuario3, usuario4, usuario5];
         let ofertas = [oferta1, oferta2, oferta3, oferta4, oferta5, oferta6, oferta7, oferta8, oferta9, oferta10,
                         oferta11, oferta12, oferta13, oferta14, oferta15];
-        gestorBD.insertarUsuario(usuario, function (uids){
-            gestorBD.insertarOferta(ofertas, function (oids){
-                gestorBD.obtenerUsuarios({}, function (usuarios){
-                    gestorBD.obtenerOfertas({}, function (ofertas){
-                        let conversacion1 = {
-                            idUsuarioInteresado : usuarios[1]._id,
-                            idUsuarioPropetario : usuarios[2]._id,
-                            idOferta : ofertas[5]._id
-                        }
-                        let conversacion2 = {
-                            idUsuarioInteresado : usuarios[2]._id,
-                            idUsuarioPropetario : usuarios[3]._id,
-                            idOferta : ofertas[6]._id
-                        }
-                        let conversacion3 = {
-                            idUsuarioInteresado : usuarios[3]._id,
-                            idUsuarioPropetario : usuarios[4]._id,
-                            idOferta : ofertas[9]._id
-                        }
-                        let conversacion4 = {
-                            idUsuarioInteresado : usuarios[4]._id,
-                            idUsuarioPropetario : usuarios[5]._id,
-                            idOferta : ofertas[12]._id
-                        }
-                        let conversacion5 = {
-                            idUsuarioInteresado : usuarios[5]._id,
-                            idUsuarioPropetario : usuarios[1]._id,
-                            idOferta : ofertas[1]._id
-                        }
-                        let conversaciones = [conversacion1, conversacion2, conversacion3, conversacion4, conversacion5];
-                        gestorBD.insertarConversacion(conversaciones, function (cids){
-                            gestorBD.obtenerConversaciones({}, function (conversaciones){
-                                let mensaje1 = {
-                                    idConversacion : conversaciones[0]._id,
-                                    fecha : Date.now(),
-                                    mensaje : "Hola",
-                                    leido : false,
-                                    emisor : usuario1.email
-                                };
+        gestorBD.dropUsuarios(function (id){
+            gestorBD.dropMensajes(function (id){
+                gestorBD.dropOfertas(function (id){
+                    gestorBD.dropConversaciones(function (id){
+                        gestorBD.insertarUsuario(usuario, function (uids){
+                            gestorBD.insertarOferta(ofertas, function (oids){
+                                gestorBD.obtenerUsuarios({}, function (usuarios){
+                                    gestorBD.obtenerOfertas({}, function (ofertas){
+                                        let conversacion1 = {
+                                            idUsuarioInteresado : usuarios[1]._id,
+                                            idUsuarioPropetario : usuarios[2]._id,
+                                            idOferta : ofertas[5]._id
+                                        }
+                                        let conversacion2 = {
+                                            idUsuarioInteresado : usuarios[2]._id,
+                                            idUsuarioPropetario : usuarios[3]._id,
+                                            idOferta : ofertas[6]._id
+                                        }
+                                        let conversacion3 = {
+                                            idUsuarioInteresado : usuarios[3]._id,
+                                            idUsuarioPropetario : usuarios[4]._id,
+                                            idOferta : ofertas[9]._id
+                                        }
+                                        let conversacion4 = {
+                                            idUsuarioInteresado : usuarios[4]._id,
+                                            idUsuarioPropetario : usuarios[5]._id,
+                                            idOferta : ofertas[12]._id
+                                        }
+                                        let conversacion5 = {
+                                            idUsuarioInteresado : usuarios[5]._id,
+                                            idUsuarioPropetario : usuarios[1]._id,
+                                            idOferta : ofertas[1]._id
+                                        }
+                                        let conversaciones = [conversacion1, conversacion2, conversacion3, conversacion4, conversacion5];
+                                        gestorBD.insertarConversacion(conversaciones, function (cids){
+                                            gestorBD.obtenerConversaciones({}, function (conversaciones){
+                                                let mensaje1 = {
+                                                    idConversacion : conversaciones[0]._id,
+                                                    fecha : Date.now(),
+                                                    mensaje : "Hola",
+                                                    leido : false,
+                                                    emisor : usuario1.email
+                                                };
 
-                                let mensaje2 = {
-                                    idConversacion : conversaciones[0]._id,
-                                    fecha : Date.now(),
-                                    mensaje : "Me interesa",
-                                    leido : false,
-                                    emisor : usuario1.email
-                                };
+                                                let mensaje2 = {
+                                                    idConversacion : conversaciones[0]._id,
+                                                    fecha : Date.now(),
+                                                    mensaje : "Me interesa",
+                                                    leido : false,
+                                                    emisor : usuario1.email
+                                                };
 
-                                let mensaje3 = {
-                                    idConversacion : conversaciones[0]._id,
-                                    fecha : Date.now(),
-                                    mensaje : "Buenas",
-                                    leido : false,
-                                    emisor : usuario2.email
-                                };
+                                                let mensaje3 = {
+                                                    idConversacion : conversaciones[0]._id,
+                                                    fecha : Date.now(),
+                                                    mensaje : "Buenas",
+                                                    leido : false,
+                                                    emisor : usuario2.email
+                                                };
 
-                                let mensaje4 = {
-                                    idConversacion : conversaciones[0]._id,
-                                    fecha : Date.now(),
-                                    mensaje : "Es muy buen producto",
-                                    leido : false,
-                                    emisor : usuario2.email
-                                };
+                                                let mensaje4 = {
+                                                    idConversacion : conversaciones[0]._id,
+                                                    fecha : Date.now(),
+                                                    mensaje : "Es muy buen producto",
+                                                    leido : false,
+                                                    emisor : usuario2.email
+                                                };
 
-                                let mensaje5 = {
-                                    idConversacion : conversaciones[1]._id,
-                                    fecha : Date.now(),
-                                    mensaje : "Buenas Tardes",
-                                    leido : false,
-                                    emisor : usuario2.email
-                                };
+                                                let mensaje5 = {
+                                                    idConversacion : conversaciones[1]._id,
+                                                    fecha : Date.now(),
+                                                    mensaje : "Buenas Tardes",
+                                                    leido : false,
+                                                    emisor : usuario2.email
+                                                };
 
-                                let mensaje6 = {
-                                    idConversacion : conversaciones[1]._id,
-                                    fecha : Date.now(),
-                                    mensaje : "Se podria bajar el precio",
-                                    leido : false,
-                                    emisor : usuario2.email
-                                };
+                                                let mensaje6 = {
+                                                    idConversacion : conversaciones[1]._id,
+                                                    fecha : Date.now(),
+                                                    mensaje : "Se podria bajar el precio",
+                                                    leido : false,
+                                                    emisor : usuario2.email
+                                                };
 
-                                let mensaje7 = {
-                                    idConversacion : conversaciones[1]._id,
-                                    fecha : Date.now(),
-                                    mensaje : "Hola",
-                                    leido : false,
-                                    emisor : usuario3.email
-                                };
+                                                let mensaje7 = {
+                                                    idConversacion : conversaciones[1]._id,
+                                                    fecha : Date.now(),
+                                                    mensaje : "Hola",
+                                                    leido : false,
+                                                    emisor : usuario3.email
+                                                };
 
-                                let mensaje8 = {
-                                    idConversacion : conversaciones[1]._id,
-                                    fecha : Date.now(),
-                                    mensaje : "No, no se puede",
-                                    leido : false,
-                                    emisor : usuario3.email
-                                };
+                                                let mensaje8 = {
+                                                    idConversacion : conversaciones[1]._id,
+                                                    fecha : Date.now(),
+                                                    mensaje : "No, no se puede",
+                                                    leido : false,
+                                                    emisor : usuario3.email
+                                                };
 
-                                let mensaje9 = {
-                                    idConversacion : conversaciones[2]._id,
-                                    fecha : Date.now(),
-                                    mensaje : "Buenas Dias",
-                                    leido : false,
-                                    emisor : usuario3.email
-                                };
+                                                let mensaje9 = {
+                                                    idConversacion : conversaciones[2]._id,
+                                                    fecha : Date.now(),
+                                                    mensaje : "Buenas Dias",
+                                                    leido : false,
+                                                    emisor : usuario3.email
+                                                };
 
-                                let mensaje10 = {
-                                    idConversacion : conversaciones[2]._id,
-                                    fecha : Date.now(),
-                                    mensaje : "Necesito saber cuando lo podria recoger",
-                                    leido : false,
-                                    emisor : usuario3.email
-                                };
+                                                let mensaje10 = {
+                                                    idConversacion : conversaciones[2]._id,
+                                                    fecha : Date.now(),
+                                                    mensaje : "Necesito saber cuando lo podria recoger",
+                                                    leido : false,
+                                                    emisor : usuario3.email
+                                                };
 
-                                let mensaje11 = {
-                                    idConversacion : conversaciones[2]._id,
-                                    fecha : Date.now(),
-                                    mensaje : "Buenas",
-                                    leido : false,
-                                    emisor : usuario4.email
-                                };
+                                                let mensaje11 = {
+                                                    idConversacion : conversaciones[2]._id,
+                                                    fecha : Date.now(),
+                                                    mensaje : "Buenas",
+                                                    leido : false,
+                                                    emisor : usuario4.email
+                                                };
 
-                                let mensaje12 = {
-                                    idConversacion : conversaciones[2]._id,
-                                    fecha : Date.now(),
-                                    mensaje : "Cualquier dia de esta semana",
-                                    leido : false,
-                                    emisor : usuario4.email
-                                };
+                                                let mensaje12 = {
+                                                    idConversacion : conversaciones[2]._id,
+                                                    fecha : Date.now(),
+                                                    mensaje : "Cualquier dia de esta semana",
+                                                    leido : false,
+                                                    emisor : usuario4.email
+                                                };
 
-                                let mensaje13 = {
-                                    idConversacion : conversaciones[3]._id,
-                                    fecha : Date.now(),
-                                    mensaje : "Saludos",
-                                    leido : false,
-                                    emisor : usuario4.email
-                                };
+                                                let mensaje13 = {
+                                                    idConversacion : conversaciones[3]._id,
+                                                    fecha : Date.now(),
+                                                    mensaje : "Saludos",
+                                                    leido : false,
+                                                    emisor : usuario4.email
+                                                };
 
-                                let mensaje14 = {
-                                    idConversacion : conversaciones[3]._id,
-                                    fecha : Date.now(),
-                                    mensaje : "Tiene algun tipo de problema",
-                                    leido : false,
-                                    emisor : usuario4.email
-                                };
+                                                let mensaje14 = {
+                                                    idConversacion : conversaciones[3]._id,
+                                                    fecha : Date.now(),
+                                                    mensaje : "Tiene algun tipo de problema",
+                                                    leido : false,
+                                                    emisor : usuario4.email
+                                                };
 
-                                let mensaje15 = {
-                                    idConversacion : conversaciones[3]._id,
-                                    fecha : Date.now(),
-                                    mensaje : "No",
-                                    leido : false,
-                                    emisor : usuario5.email
-                                };
+                                                let mensaje15 = {
+                                                    idConversacion : conversaciones[3]._id,
+                                                    fecha : Date.now(),
+                                                    mensaje : "No",
+                                                    leido : false,
+                                                    emisor : usuario5.email
+                                                };
 
-                                let mensaje16 = {
-                                    idConversacion : conversaciones[3]._id,
-                                    fecha : Date.now(),
-                                    mensaje : "Esta en perfecto estado",
-                                    leido : false,
-                                    emisor : usuario5.email
-                                };
+                                                let mensaje16 = {
+                                                    idConversacion : conversaciones[3]._id,
+                                                    fecha : Date.now(),
+                                                    mensaje : "Esta en perfecto estado",
+                                                    leido : false,
+                                                    emisor : usuario5.email
+                                                };
 
-                                let mensaje17 = {
-                                    idConversacion : conversaciones[4]._id,
-                                    fecha : Date.now(),
-                                    mensaje : "Me gustaria probarla antes",
-                                    leido : false,
-                                    emisor : usuario5.email
-                                };
+                                                let mensaje17 = {
+                                                    idConversacion : conversaciones[4]._id,
+                                                    fecha : Date.now(),
+                                                    mensaje : "Me gustaria probarla antes",
+                                                    leido : false,
+                                                    emisor : usuario5.email
+                                                };
 
-                                let mensaje18 = {
-                                    idConversacion : conversaciones[4]._id,
-                                    fecha : Date.now(),
-                                    mensaje : "Si es posible",
-                                    leido : false,
-                                    emisor : usuario5.email
-                                };
+                                                let mensaje18 = {
+                                                    idConversacion : conversaciones[4]._id,
+                                                    fecha : Date.now(),
+                                                    mensaje : "Si es posible",
+                                                    leido : false,
+                                                    emisor : usuario5.email
+                                                };
 
-                                let mensaje19 = {
-                                    idConversacion : conversaciones[4]._id,
-                                    fecha : Date.now(),
-                                    mensaje : "Si",
-                                    leido : false,
-                                    emisor : usuario1.email
-                                };
+                                                let mensaje19 = {
+                                                    idConversacion : conversaciones[4]._id,
+                                                    fecha : Date.now(),
+                                                    mensaje : "Si",
+                                                    leido : false,
+                                                    emisor : usuario1.email
+                                                };
 
-                                let mensaje20 = {
-                                    idConversacion : conversaciones[4]._id,
-                                    fecha : Date.now(),
-                                    mensaje : "Puedes probarla si quieres",
-                                    leido : false,
-                                    emisor : usuario1.email
-                                };
-                                let mensajes = [mensaje1, mensaje2, mensaje3, mensaje4, mensaje5, mensaje6, mensaje7,
-                                                mensaje8, mensaje9, mensaje10, mensaje11, mensaje12, mensaje13, mensaje14,
-                                                mensaje15, mensaje16, mensaje17, mensaje18, mensaje19, mensaje20];
+                                                let mensaje20 = {
+                                                    idConversacion : conversaciones[4]._id,
+                                                    fecha : Date.now(),
+                                                    mensaje : "Puedes probarla si quieres",
+                                                    leido : false,
+                                                    emisor : usuario1.email
+                                                };
+                                                let mensajes = [mensaje1, mensaje2, mensaje3, mensaje4, mensaje5, mensaje6, mensaje7,
+                                                    mensaje8, mensaje9, mensaje10, mensaje11, mensaje12, mensaje13, mensaje14,
+                                                    mensaje15, mensaje16, mensaje17, mensaje18, mensaje19, mensaje20];
 
-                                gestorBD.insertarMensaje(mensajes, function (mids){
-                                    res.redirect('/inicio');
-                                })
+                                                gestorBD.insertarMensaje(mensajes, function (mids){
+                                                    res.redirect('/inicio');
+                                                })
+                                            });
+                                        });
+                                    });
+                                });
                             });
                         });
+                    });
                     });
                 });
             });
         });
 
-    });
+
+
 }
